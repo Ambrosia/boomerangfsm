@@ -1,0 +1,2 @@
+defmodule Boomerangfsm do
+end
