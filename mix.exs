@@ -4,7 +4,7 @@ defmodule Boomerangfsm.Mixfile do
   def project do
     [app: :boomerangfsm,
      version: "0.0.1",
-     elixir: "~> 1.0.0-rc2",
+     elixir: "~> 1.0.0",
      deps: deps]
   end
 
