@@ -29,7 +29,7 @@ defmodule BoomerangFSM.Player do
   end
 
   # OTP stuff
-  def start_link(args) do
+  def start_link(args \\ []) do
     :gen_fsm.start_link(__MODULE__, args, [])
   end
 
