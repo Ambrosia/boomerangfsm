@@ -10,7 +10,16 @@ defmodule BoomerangFSM.Player do
     :sys.get_state pid
   end
 
+  def add_opponent(pid, opponent_pid) do
+    :gen_fsm.send_event(pid, {:add_opponent, opponent_pid})
+  end
+
   # State machine
+  def awaiting_opponent({:add_opponent, opponent}, state) do
+    state = %{state | opponent: opponent}
+    {:next_state, :ready_to_throw, state}
+  end
+
   def awaiting_opponent(_, state) do
     {:next_state, :awaiting_opponent, state}
   end
