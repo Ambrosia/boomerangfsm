@@ -1,2 +1,2 @@
-defmodule Boomerangfsm do
+defmodule BoomerangFSM do
 end
