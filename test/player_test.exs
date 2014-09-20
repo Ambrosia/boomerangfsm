@@ -8,7 +8,7 @@ defmodule BoomerangFSM.PlayerTest do
     assert {:ok, player2} = Player.start_link name: "Player 2", opponent: player1
 
     assert {:awaiting_opponent, %Player{name: "Player 1"}} = Player.state player1
-    assert {:ready_to_play, %Player{opponent: ^player1}} = Player.state player2
+    assert {:ready, %Player{opponent: ^player1}} = Player.state player2
   end
 
   test "players can be assigned to each other" do

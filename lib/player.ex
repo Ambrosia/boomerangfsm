@@ -17,15 +17,15 @@ defmodule BoomerangFSM.Player do
   # State machine
   def awaiting_opponent({:add_opponent, opponent}, state) do
     state = %{state | opponent: opponent}
-    {:next_state, :ready_to_play, state}
+    {:next_state, :ready, state}
   end
 
   def awaiting_opponent(_, state) do
     {:next_state, :awaiting_opponent, state}
   end
 
-  def ready_to_play(_, state) do
-    {:next_state, :ready_to_play, state}
+  def ready(_, state) do
+    {:next_state, :ready, state}
   end
 
   # OTP stuff
@@ -41,7 +41,7 @@ defmodule BoomerangFSM.Player do
 
     case state.opponent do
       nil -> {:ok, :awaiting_opponent, state}
-      _   -> {:ok, :ready_to_play, state}
+      _   -> {:ok, :ready, state}
     end
   end
 end
