@@ -14,6 +14,8 @@ defmodule BoomerangFSM.Player do
     :gen_fsm.send_event(pid, {:add_opponent, opponent_pid})
   end
 
+  def give_boomerang(pid), do: :gen_fsm.send_event(pid, :give_boomerang)
+
   # State machine
   def awaiting_opponent({:add_opponent, opponent}, state) do
     state = %{state | opponent: opponent}
@@ -24,9 +26,7 @@ defmodule BoomerangFSM.Player do
     {:next_state, :awaiting_opponent, state}
   end
 
-  def ready(_, state) do
-    {:next_state, :ready, state}
-  end
+  def ready(:give_boomerang, state), do: {:next_state, :ready_to_throw, state}
 
   # OTP stuff
   def start_link(args \\ []) do

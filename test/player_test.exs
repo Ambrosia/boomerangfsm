@@ -18,6 +18,18 @@ defmodule BoomerangFSM.PlayerTest do
     assert {_, %Player{opponent: ^player1}} = Player.state player2
   end
 
+  test "a player becomes ready to throw when given a boomerang" do
+    {player1, player2} = create_two_players
+    Player.give_boomerang player1
+
+    assert {:awaiting_opponent, _} = Player.state player1
+
+    {player1, player2} |> assign_players_to_each_other
+    Player.give_boomerang player1
+
+    assert {:ready_to_throw, _} = Player.state player1
+  end
+
   defp create_two_players do
     {:ok, player1} = Player.start_link name: "Player 1"
     {:ok, player2} = Player.start_link name: "Player 2"
