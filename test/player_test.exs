@@ -14,8 +14,8 @@ defmodule BoomerangFSM.PlayerTest do
   test "players can be assigned to each other" do
     {player1, player2} = create_two_players |> assign_players_to_each_other
 
-    assert {_, %Player{opponent: ^player2}} = Player.state player1
-    assert {_, %Player{opponent: ^player1}} = Player.state player2
+    assert {:ready, %Player{opponent: ^player2}} = Player.state player1
+    assert {:ready, %Player{opponent: ^player1}} = Player.state player2
   end
 
   test "a player becomes ready to throw when given a boomerang" do
