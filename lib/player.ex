@@ -1,4 +1,6 @@
 defmodule BoomerangFSM.Player do
+  @wait_to_catch_time 6000
+
   @behaviour :gen_fsm
 
   @derive [Access]
@@ -15,10 +17,6 @@ defmodule BoomerangFSM.Player do
   end
 
   def give_boomerang(pid), do: :gen_fsm.send_event(pid, :give_boomerang)
-
-  def set_wait_to_catch_time(pid, time) do
-    :gen_fsm.send_all_state_event(pid, {:change_wait_to_catch_time, time})
-  end
 
   # State machine
   def awaiting_opponent({:add_opponent, opponent}, state) do
@@ -40,16 +38,13 @@ defmodule BoomerangFSM.Player do
   def init(args) do
     state = %Player{
       name: Keyword.get(args, :name),
-      opponent: Keyword.get(args, :opponent)
+      opponent: Keyword.get(args, :opponent),
+      wait_to_catch_time: Keyword.get(args, :wait_to_catch_time, @wait_to_catch_time)
     }
 
     case state.opponent do
       nil -> {:ok, :awaiting_opponent, state}
       _   -> {:ok, :ready, state}
     end
-  end
-
-  def handle_event({:change_wait_to_catch_time, time}, current_state, state_data) do
-    {:next_state, current_state, %Player{state_data | wait_to_catch_time: time}}
   end
 end

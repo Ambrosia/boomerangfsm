@@ -3,6 +3,8 @@ defmodule BoomerangFSM.PlayerTest do
 
   alias BoomerangFSM.Player
 
+  @wait_to_catch_time 1000
+
   test "start_link arguments work correctly" do
     assert {:ok, player1} = Player.start_link name: "Player 1"
     assert {:ok, player2} = Player.start_link name: "Player 2", opponent: player1
@@ -41,26 +43,9 @@ defmodule BoomerangFSM.PlayerTest do
     assert {:ready_to_catch, _} = Player.state player2
   end
 
-  test "a player's wait to catch time can be changed in any state" do
-    {player1, player2} = create_two_players |> assign_players_to_each_other
-    Player.set_wait_to_catch_time player1, 1000
-
-    assert {_, %Player{wait_to_catch_time: 1000}} = Player.state player1
-
-    Player.give_boomerang player1
-    Player.set_wait_to_catch_time player1, 2000
-
-    assert {_, %Player{wait_to_catch_time: 2000}} = Player.state player1
-
-    Player.throw_boomerang player1
-    Player.set_wait_to_catch_time player1, 3000
-
-    assert {_, %Player{wait_to_catch_time: 3000}} = Player.state player1
-  end
-
   defp create_two_players do
-    {:ok, player1} = Player.start_link name: "Player 1"
-    {:ok, player2} = Player.start_link name: "Player 2"
+    {:ok, player1} = Player.start_link name: "Player 1", wait_to_catch_time: @wait_to_catch_time
+    {:ok, player2} = Player.start_link name: "Player 2", wait_to_catch_time: @wait_to_catch_time
     {player1, player2}
   end
 
