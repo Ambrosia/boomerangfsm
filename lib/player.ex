@@ -25,20 +25,6 @@ defmodule BoomerangFSM.Player do
 
   def give_boomerang(pid), do: :gen_fsm.send_event(pid, :give_boomerang)
 
-  def throw_boomerang(pid, test: :boomerang_lost), do: :gen_fsm.send_event(pid, :throw_boomerang)
-  def throw_boomerang(pid, test: :boomerang_return) do
-    :gen_fsm.send_event(pid, :throw_boomerang)
-    {_, state} = Player.state pid
-    :timer.sleep state.boomerang_flight_time
-    :gen_fsm.send_event(pid, :caught_boomerang)
-  end
-  def throw_boomerang(pid, test: :boomerang_opponent) do
-    :gen_fsm.send_event(pid, :throw_boomerang)
-    {_, state} = Player.state pid
-    :timer.sleep state.boomerang_flight_time
-    :gen_fsm.send_event(state.opponent, :caught_boomerang)
-  end
-
   def throw_boomerang(pid) do
     :gen_fsm.send_event(pid, :throw_boomerang)
 
@@ -54,10 +40,23 @@ defmodule BoomerangFSM.Player do
     end
   end
 
+  def throw_boomerang(pid, test: :boomerang_lost), do: :gen_fsm.send_event(pid, :throw_boomerang)
+  def throw_boomerang(pid, test: :boomerang_return) do
+    :gen_fsm.send_event(pid, :throw_boomerang)
+    {_, state} = Player.state pid
+    :timer.sleep state.boomerang_flight_time
+    :gen_fsm.send_event(pid, :caught_boomerang)
+  end
+  def throw_boomerang(pid, test: :boomerang_opponent) do
+    :gen_fsm.send_event(pid, :throw_boomerang)
+    {_, state} = Player.state pid
+    :timer.sleep state.boomerang_flight_time
+    :gen_fsm.send_event(state.opponent, :caught_boomerang)
+  end
+
   # State machine
   def awaiting_opponent({:add_opponent, opponent}, state) do
-    state = %{state | opponent: opponent}
-    {:next_state, :ready, state}
+    {:next_state, :ready, %{state | opponent: opponent}}
   end
 
   def awaiting_opponent(_, state) do
